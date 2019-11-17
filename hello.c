@@ -8,7 +8,8 @@
 #include "mpi.h"
 #include "utils.h"
 
-int main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
 	int ret;
 	/* who am i? */
@@ -29,8 +30,8 @@ int main(int argc, char **argv)
 	if (ret != MPI_SUCCESS)
 		mpi_err(ret, "MPI_Comm_size");
 
-	printf("[%s] i am %d of total %d processes\n", hostname, my_rank,
-				 proc_size);
+	printf("[%s] i am %d of total %d processes\n", hostname, my_rank, 
+	    proc_size);
 	hostname_end(hostname);
 	ret = MPI_Finalize();
 	if (ret != MPI_SUCCESS)
