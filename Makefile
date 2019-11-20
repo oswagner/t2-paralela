@@ -1,5 +1,5 @@
 CC      =   	mpicc
-BIN     =   	hello
+BIN     =   	soma-interios
 SRCS	=	soma-interios.c utils.c
 OBJDIR 	=	obj
 
