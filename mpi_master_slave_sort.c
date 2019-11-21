@@ -43,8 +43,8 @@ int main(int argc, char **argv)
     int *chunk_arr_remainder = 0;
 
     // evaluate chunks sizes
-    int chunk_size = arr / proc_size;
-    int chunk_remainder_size = arr % proc_size;
+    int chunk_size = size_arr / proc_size;
+    int chunk_remainder_size = size_arr % proc_size;
 
     if (chunk_remainder_size != 0)
         chunk_arr_remainder = (int *)malloc(chunk_remainder_size * sizeof(int));
