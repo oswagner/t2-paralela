@@ -37,7 +37,23 @@ int main(int argc, char **argv)
 
     hostname_init(&hostname);
 
-    mpi_initialization(ret, my_Rank, proc_size, argc, argv);
+    ret = MPI_Init(&argc, &argv);
+    if (ret != MPI_SUCCESS)
+    {
+      mpi_err(1, "MPI_Init");
+    }
+  
+    ret = MPI_Comm_rank(MPI_COMM_WORLD, &my_Rank);
+    if (ret != MPI_SUCCESS)
+    {
+      mpi_err(1, "MPI_Comm_rank");
+    }
+  
+    ret = MPI_Comm_size(MPI_COMM_WORLD, &proc_size);
+    if (ret != MPI_SUCCESS)
+    {
+      mpi_err(1, "MPI_Comm_size");
+    }
 
     // generate random values in the array
     set_random_values_to_arr(arr, size_arr);
