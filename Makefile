@@ -1,6 +1,6 @@
 CC      =   	mpicc
 BIN     =   	mestre_escravo
-SRCS	=	mestre_escravo.c utils.c
+SRCS	=	mestre_escravo.c utils.c bubble_sort.c
 OBJDIR 	=	obj
 
 CFLAGS  = -Wall

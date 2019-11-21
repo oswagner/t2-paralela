@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "mpi.h"
 #include "utils.h"
+#include "bubble_sort.h"
 
 int main(int argc, char **argv)
 {
@@ -59,7 +60,8 @@ int main(int argc, char **argv)
         }
 
         printf("Soma total vale: %d\n", total);
-        printf("\n");
+        bubbleSort([ 20, 30, 10, 23, 4, 5, 1, 2, 314, 32 ], )
+            printf("\n");
     }
     else
     {
