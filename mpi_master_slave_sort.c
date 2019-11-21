@@ -21,8 +21,8 @@ int main(int argc, char **argv)
     // provided by teacher
     char *hostname;
     int ret;
-    int my_Rank;
-    int proc_size;
+    int process_id;
+    int number_of_process;
     MPI_Status status;
 
     unsigned int soma;
@@ -42,14 +42,14 @@ int main(int argc, char **argv)
     {
       mpi_err(1, "MPI_Init");
     }
-  
-    ret = MPI_Comm_rank(MPI_COMM_WORLD, &my_Rank);
+
+    ret = MPI_Comm_rank(MPI_COMM_WORLD, &process_id);
     if (ret != MPI_SUCCESS)
     {
       mpi_err(1, "MPI_Comm_rank");
     }
-  
-    ret = MPI_Comm_size(MPI_COMM_WORLD, &proc_size);
+
+    ret = MPI_Comm_size(MPI_COMM_WORLD, &number_of_process);
     if (ret != MPI_SUCCESS)
     {
       mpi_err(1, "MPI_Comm_size");
@@ -58,31 +58,37 @@ int main(int argc, char **argv)
     // generate random values in the array
     set_random_values_to_arr(arr, size_arr);
 
-    int *chunk_arr = 0;
-    int *chunk_arr_remainder = 0;
+    // int *chunk_arr = 0;
+    // int *chunk_arr_remainder = 0;
 
-    // evaluate chunks sizes
-    int chunk_size = size_arr / proc_size;
-    int chunk_remainder_size = size_arr % proc_size;
+    // evaluate number of chunks
+    // int chunk_total = size_arr / number_of_process;
+    // int chunk_remainder_size = size_arr % number_of_process;
 
-    if (chunk_remainder_size != 0)
-        chunk_arr_remainder = (int *)malloc(chunk_remainder_size * sizeof(int));
+    // if (chunk_remainder_size != 0)
+    //     chunk_arr_remainder = (int *)malloc(chunk_remainder_size * sizeof(int));
 
-    chunk_arr = (int *)malloc(chunk_size * sizeof(int));
+    // chunk_arr = (int *)malloc(chunk_size * sizeof(int));
+
+    
+
+
+
+
 
     
     soma = 1;
     total = 0;
-    if(my_Rank == 0){
+    if(process_id == 0){
         int aux = 1;
-        for(aux ; aux < proc_size ; aux++){
+        for(aux ; aux < number_of_process ; aux++){
             ret = MPI_Send(&soma, 1, MPI_UNSIGNED, aux, 0, MPI_COMM_WORLD);
             if(ret != MPI_SUCCESS){
                 mpi_err(1,"MPI_Send");
             }
         }
         aux = 1;
-        for(aux ; aux < proc_size ; aux++){
+        for(aux ; aux < number_of_process ; aux++){
             ret = MPI_Recv(&soma, 1, MPI_UNSIGNED,aux,0,MPI_COMM_WORLD, &status);
             if(ret != MPI_SUCCESS){
                 mpi_err(1,"MPI_Recv");
@@ -109,7 +115,7 @@ int main(int argc, char **argv)
         }
 
         soma = soma + 1;
-        printf("[%s] soma tem o valor de %d. my rank: %d\n", hostname, soma, my_Rank);
+        printf("[%s] soma tem o valor de %d. my rank: %d\n", hostname, soma, process_id);
 
         ret = MPI_Send(&soma, 1, MPI_UNSIGNED, 0, 0, MPI_COMM_WORLD);
         if(ret != MPI_SUCCESS){
