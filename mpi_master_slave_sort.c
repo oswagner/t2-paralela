@@ -15,13 +15,44 @@ void set_random_values_to_arr(int arr[], int arr_size)
         arr[i] = rand_between(0, arr_size);
 }
 
+void mpi_initialization(int ret, int my_Rank, int proc_size, int argc, char **argv)
+{
+    // MPI initialization
+    ret = MPI_Init(&argc, &argv);
+    if (ret != MPI_SUCCESS)
+    {
+      mpi_err(1, "MPI_Init");
+    }
+    
+    ret = MPI_Comm_rank(MPI_COMM_WORLD, &my_Rank);
+    if (ret != MPI_SUCCESS)
+    {
+      mpi_err(1, "MPI_Comm_rank");
+    }
+    
+    ret = MPI_Comm_size(MPI_COMM_WORLD, &proc_size);
+    if (ret != MPI_SUCCESS)
+    {
+      mpi_err(1, "MPI_Comm_size");
+    }
+}
+
+void mpi_finalization(int ret)
+{
+    ret = MPI_Finalize();
+    if (ret != MPI_SUCCESS)
+    {
+      mpi_err(1, "MPI_Finalize");
+    }
+}
+
 int main(int argc, char **argv)
 {
     // provided by teacher
-    int ret;
     char *hostname;
+    int ret;
     int my_Rank;
-    int proc_size = 8;
+    int proc_size;
     MPI_Status status;
 
     unsigned int soma;
@@ -35,6 +66,8 @@ int main(int argc, char **argv)
     // double execution_time;
 
     // hostname_init(&hostname);
+
+    mpi_initialization(ret, my_Rank, proc_size, argc, argv);
 
     // generate random values in the array
     set_random_values_to_arr(arr, size_arr);
@@ -51,12 +84,7 @@ int main(int argc, char **argv)
 
     chunk_arr = (int *)malloc(chunk_size * sizeof(int));
 
-    printArray(arr, size_arr);
-    printf("original array");
-    printArray(chunk_arr, chunk_size);
-    printf("chunk array");
-    printArray(chunk_arr_remainder, chunk_remainder_size);
-    printf("chunk_reainder array");
+    mpi_finalization(ret);    
 
     return 0;
 }
