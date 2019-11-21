@@ -10,7 +10,8 @@
 
 void set_random_values_to_arr(int arr[], int arr_size)
 {
-    for (int i = 0; i < arr_size; i++)
+    int i = 0;
+    for (i; i < arr_size; i++)
     {
         arr[i] = rand_between(0, arr_size);
     }
