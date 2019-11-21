@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     // clock_t start_execution, end_execution;
     // double execution_time;
 
-    // hostname_init(&hostname);
+    hostname_init(&hostname);
 
     mpi_initialization(ret, my_Rank, proc_size, argc, argv);
 
