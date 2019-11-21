@@ -1,6 +1,6 @@
 CC      =   	mpicc
-BIN     =   	hello
-SRCS	=	hello.c utils.c bubble_sort.c
+BIN     =   	mpi_master_slave_sort
+SRCS	=	mpi_master_slave_sort.c utils.c bubble_sort.c
 OBJDIR 	=	obj
 
 CFLAGS  = -Wall

@@ -2,20 +2,42 @@
 #include <stdio.h>
 #include "mpi.h"
 #include "utils.h"
+#include <time.h>
+#include "bubble_sort.h"
+
+#define rand_between(min, max) \
+    ((rand() % (int)(((max) + 1) - (min))) + (min))
+
+void set_random_values_to_arr(int arr[], int arr_size)
+{
+    for (int i = 0; i < arr_size; i++)
+    {
+        arr[i] = rand_between(0, arr_size);
+    }
+}
 
 int main(int argc, char **argv)
 {
+    // provided by teacher
     int ret;
     char *hostname;
     int my_Rank;
     int proc_size;
+    MPI_Status status;
+
     unsigned int soma;
     unsigned int total;
-    MPI_Status status;
     int count;
+
+    int size_arr = atoi(argv[1]);
+    int *arr = (int *)malloc(size_arr * sizeof(int));
+
+    clock_t start_execution, end_execution;
+    double execution_time;
 
     hostname_init(&hostname);
 
+    // MPI initialization
     ret = MPI_Init(&argc, &argv);
     if (ret != MPI_SUCCESS)
     {
@@ -34,14 +56,18 @@ int main(int argc, char **argv)
         mpi_err(1, "MPI_Comm_size");
     }
 
+    set_random_values_to_arr(arr, size_arr);
+
+    printArray(arr, size_arr);
+
     soma = 1;
     total = 0;
-    if (my_Rank == 0)
+    if (my_Rank == 0) // identify master
     {
-        int aux = 1; // identificador do processo
+        int aux = 1; // process id
         for (aux; aux < proc_size; aux++)
         {
-            ret = MPI_Send(&soma, 1, MPI_UNSIGNED, aux, 0, MPI_COMM_WORLD);
+            ret = MPI_Send(&soma, 1, MPI_UNSIGNED, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD);
             if (ret != MPI_SUCCESS)
             {
                 mpi_err(1, "MPI_Send");
@@ -59,8 +85,7 @@ int main(int argc, char **argv)
         }
 
         printf("Soma total vale: %d\n", total);
-        bubbleSort([ 20, 30, 10, 23, 4, 5, 1, 2, 314, 32 ], )
-            printf("\n");
+        printf("\n");
     }
     else
     {
