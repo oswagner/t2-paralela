@@ -15,36 +15,6 @@ void set_random_values_to_arr(int arr[], int arr_size)
         arr[i] = rand_between(0, arr_size);
 }
 
-void mpi_initialization(int ret, int my_Rank, int proc_size, int argc, char **argv)
-{
-    // MPI initialization
-    ret = MPI_Init(&argc, &argv);
-    if (ret != MPI_SUCCESS)
-    {
-      mpi_err(1, "MPI_Init");
-    }
-    
-    ret = MPI_Comm_rank(MPI_COMM_WORLD, &my_Rank);
-    if (ret != MPI_SUCCESS)
-    {
-      mpi_err(1, "MPI_Comm_rank");
-    }
-    
-    ret = MPI_Comm_size(MPI_COMM_WORLD, &proc_size);
-    if (ret != MPI_SUCCESS)
-    {
-      mpi_err(1, "MPI_Comm_size");
-    }
-}
-
-void mpi_finalization(int ret)
-{
-    ret = MPI_Finalize();
-    if (ret != MPI_SUCCESS)
-    {
-      mpi_err(1, "MPI_Finalize");
-    }
-}
 
 int main(int argc, char **argv)
 {
@@ -131,7 +101,11 @@ int main(int argc, char **argv)
         }
     }
 
-    mpi_finalization(ret);    
+    ret = MPI_Finalize();
+    if (ret != MPI_SUCCESS)
+    {
+      mpi_err(1, "MPI_Finalize");
+    }
 
     return 0;
 }
