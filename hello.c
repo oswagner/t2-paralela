@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include "mpi.h"
 #include "utils.h"
+#include "bubble_sort.h"
 
 int main(int argc, char **argv)
 {
@@ -29,8 +30,14 @@ int main(int argc, char **argv)
 	if (ret != MPI_SUCCESS)
 		mpi_err(ret, "MPI_Comm_size");
 
-	printf("[%s] i am %d of total %d processes\n", hostname, my_rank,
-				 proc_size);
+	printf("[%s] i am %d of total %d processes\n", hostname, my_rank, proc_size);
+
+	int arr[] = {64, 34, 25, 12, 22, 11, 90};
+	int n = sizeof(arr) / sizeof(arr[0]);
+	bubbleSort(arr, n);
+	printf("Sorted array: \n");
+	printArray(arr, n);
+
 	hostname_end(hostname);
 	ret = MPI_Finalize();
 	if (ret != MPI_SUCCESS)

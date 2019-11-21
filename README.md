@@ -26,4 +26,4 @@ ladalloc -c grad -n X -t Y -s
 
 numero de nodos === numero de processos
 
-
+ssh pp13814@grad.lad.pucrs.br

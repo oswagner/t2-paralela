@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "mpi.h"
 #include "utils.h"
-#include "bubble_sort.h"
 
 int main(int argc, char **argv)
 {
