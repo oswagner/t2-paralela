@@ -1,6 +1,6 @@
 CC      =   	mpicc
-BIN     =   	soma-interios
-SRCS	=	soma-interios.c utils.c
+BIN     =   	mestre_escravo
+SRCS	=	mestre_escravo.c utils.c
 OBJDIR 	=	obj
 
 CFLAGS  = -Wall

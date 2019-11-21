@@ -22,3 +22,8 @@ Y  = tempo de alocação
 ```
 ladalloc -c grad -n X -t Y -s
 ```
+
+
+numero de nodos === numero de processos
+
+
