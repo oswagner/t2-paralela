@@ -30,6 +30,7 @@ int main(int argc, char **argv)
     int size_arr = atoi(argv[1]);
     int *arr = (int *)malloc(size_arr * sizeof(int));
     int *recv_arr = (int *)malloc(size_arr * sizeof(int));
+    int *recv_chunk_arr = (int *)malloc(size_arr * sizeof(int));
 
     // clock_t start_execution, end_execution;
     // double execution_time;
@@ -82,19 +83,24 @@ int main(int argc, char **argv)
     printf("Original array: \n");
     printArray(arr, (sizeof(arr) * sizeof(int)));
 
-    // Scatterv distribute the chunks to all process
-    MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_arr, (size_arr * sizeof(int)), MPI_UNSIGNED, 0, MPI_COMM_WORLD);
-
-    // if (process_id == 0)
-    // {
-
-    // }
+    // Scatterv distribute the chunks to all processors
+    MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_chunk_arr, (size_arr * sizeof(int)), MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
     bubbleSort(chunk, (sizeof(chunk) * sizeof(int)));
 
     // show all ordered array
-    printf("Ordered array: \n");
-    printArray(recv_arr, (sizeof(recv_arr) * sizeof(int)));
+    printf("Ordered chunk array: \n");
+    printArray(recv_chunk_arr, (sizeof(recv_chunk_arr) * sizeof(int)));
+
+    // gatherv collects the chunks from all processors
+    MPI_Gatherv(&arr, chunk, MPI_UNSIGNED, &recv_arr, chunk, displacements, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
+
+    if (process_id == 0)
+    {
+        // show all unordered array
+        printf("Original ordered array: \n");
+        printArray(recv_arr, (sizeof(recv_arr) * sizeof(int)));
+    }
 
     printf("\n");
 
