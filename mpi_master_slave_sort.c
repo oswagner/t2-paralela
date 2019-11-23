@@ -94,7 +94,7 @@ int main(int argc, char **argv)
     }
 
     // Scatterv distribute the chunks to all processors
-    MPI_Scatterv(arr, chunk_size, displacements, MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(&arr, chunk_size, displacements, MPI_INT, &recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
 
     // bubbleSort(recv_chunk_arr, chunk[process_id]);
 
