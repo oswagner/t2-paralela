@@ -78,16 +78,21 @@ int main(int argc, char **argv)
         count += chunk[i];
     }
 
+    // show all unordered array
+    printArray(arr, (sizeof(arr) / sizeof(int)));
+
     // Scatterv distribute the chunks to all process
-    MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_arr, (size_arr * sizeof(int)), MPI_UNSIGNED, 0, MPI_COMM_WORLD);
+    // MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_arr, (size_arr * sizeof(int)), MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
-    if (process_id == 0)
-    {
-        printArray(arr, (sizeof(arr) / sizeof(int)));
-    }
+    // if (process_id == 0)
+    // {
 
-    bubbleSort(chunk, (sizeof(chunk) / sizeof(int)));
-    printArray(chunk, (sizeof(chunk) / sizeof(int)));
+    // }
+
+    bubbleSort(arr, (sizeof(arr) / sizeof(int)));
+
+    // show all ordered array
+    printArray(recv_arr, (sizeof(recv_arr) / sizeof(int)));
 
     printf("\n");
 
