@@ -103,15 +103,13 @@ int main(int argc, char **argv)
     printArray(recv_chunk_arr, chunk_size[process_id]);
 
     if (process_id == 0)
-    {
         recv_chunk_arr = (int *)malloc(sizeof(int) * number_of_process); // clean chunks on root to gather the values
-    }
 
     // MPI_Gather(&sub_avg, 1, MPI_FLOAT, sub_avgs, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
     // // gatherv collects the chunks from all processors
-    // MPI_Gatherv(recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_arr, (size_arr * sizeof(int)), displacements, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Gather(&recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_arr, (size_arr * sizeof(int)), MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(&recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_arr, (size_arr * sizeof(int)), displacements, MPI_INT, 0, MPI_COMM_WORLD);
+    // MPI_Gather(&recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_arr, (size_arr * sizeof(int)), MPI_INT, 0, MPI_COMM_WORLD);
 
     if (process_id == 0)
     {
