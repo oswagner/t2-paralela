@@ -79,7 +79,7 @@ int main(int argc, char **argv)
     }
 
     // Scatterv distribute the chunks to all process
-    MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_arr, (size_arr * sizeof(int)), MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_arr, (size_arr * sizeof(int)), MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
     if (process_id == 0)
     {
