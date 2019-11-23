@@ -8,6 +8,15 @@
 #define rand_between(min, max) \
     ((rand() % (int)(((max) + 1) - (min))) + (min))
 
+void print_array(int *array, int num_elements)
+{
+    int i;
+    for (i = 0; i < num_elements; i++)
+    {
+        printf("array[i] = %d ", array[i]);
+    }
+}
+
 void set_random_values_to_arr(int arr[], int arr_size)
 {
     int i = 0;
@@ -101,10 +110,7 @@ int main(int argc, char **argv)
     // show all ordered array
     printf("Ordered chunk array: \n");
     printf("chunk[process_id] = %d", chunk_size[process_id]);
-    int a = 0;
-    for (a; a < chunk_size[process_id]; a++)
-        printf("%d ", recv_chunk_arr[a]);
-    printf("\n");
+    print_array(recv_chunk_arr, chunk_size[process_id]);
 
     // printArray(recv_chunk_arr, chunk[process_id]);
 
