@@ -107,7 +107,7 @@ int main(int argc, char **argv)
     {
         // show all unordered array
         printf("Original ordered array: \n");
-        printArray(arr, (sizeof(arr) * sizeof(int)));
+        printArray(recv_chunk_arr, (sizeof(recv_chunk_arr) * sizeof(int)));
     }
 
     printf("\n");
