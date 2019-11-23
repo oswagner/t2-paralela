@@ -26,7 +26,6 @@ int main(int argc, char **argv)
 
     unsigned int soma;
     unsigned int total;
-    int count;
 
     int size_arr = atoi(argv[1]);
     int *arr = (int *)malloc(size_arr * sizeof(int));
@@ -80,7 +79,7 @@ int main(int argc, char **argv)
     }
 
     // Scatterv distribute the chunks to all process
-    MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_arr, (size_arr * sizeof(int)), MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_arr, (sizeof(int) * number_of_process), MPI_CHAR, 0, MPI_COMM_WORLD);
 
     if (process_id == 0)
     {
@@ -90,6 +89,14 @@ int main(int argc, char **argv)
             printf("chunks[%d] = %d \t displacements[%d] = %d \n", i, chunk[i], i, displacements[i]);
         }
     }
+
+    // imprime lo que recibió cada proceso
+    printf("%d: ", process_id);
+    for (int i = 0; i < chunk[process_id]; i++)
+    {
+        printf("%c\t", recv_arr[i]);
+    }
+    printf("\n");
 
     ret = MPI_Finalize();
     if (ret != MPI_SUCCESS)
