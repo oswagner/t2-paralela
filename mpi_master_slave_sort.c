@@ -83,11 +83,7 @@ int main(int argc, char **argv)
 
     if (process_id == 0)
     {
-        int i = 0;
-        for (i; i < number_of_process; i++)
-        {
-            printf("chunks[%d] = %d \t displacements[%d] = %d \n", i, chunk[i], i, displacements[i]);
-        }
+        printArray(arr, (sizeof(arr) / sizeof(int)));
     }
 
     bubbleSort(chunk, (sizeof(chunk) / sizeof(int)));
