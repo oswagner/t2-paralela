@@ -15,6 +15,27 @@ void set_random_values_to_arr(int arr[], int arr_size)
         arr[i] = rand_between(0, arr_size);
 }
 
+void split_num_between_processes(int elements_to_split, int num_bins,
+                                 int *num_elements_by_process,
+                                 int *displacements)
+{
+    // Specify how these will be distributed amongst the processes
+    int element_position = 0;
+    int i;
+    for (i = 0; i < num_bins - 1; i++)
+    {
+        displacements[i] = element_position;
+        // Integer division
+        num_elements_by_process[i] = elements_to_split / num_bins;
+        element_position += elements_to_split / num_bins;
+    }
+    // Assign the remaining elements to the last process.  If num_bins does
+    // not divide elements_to_split exactly, the last process will be assigned
+    // the more elements that the others.
+    displacements[num_bins - 1] = element_position;
+    num_elements_by_process[num_bins - 1] = elements_to_split - element_position;
+}
+
 int main(int argc, char **argv)
 {
     // provided by teacher
@@ -30,7 +51,6 @@ int main(int argc, char **argv)
     int size_arr = atoi(argv[1]);
     int *arr = (int *)malloc(size_arr * sizeof(int));
     int *recv_arr = (int *)malloc(size_arr * sizeof(int));
-    int *recv_chunk_arr = (int *)malloc(size_arr * sizeof(int));
 
     // clock_t start_execution, end_execution;
     // double execution_time;
@@ -59,27 +79,30 @@ int main(int argc, char **argv)
     set_random_values_to_arr(arr, size_arr);
 
     // evaluate the size chunk and displacements
-    int *chunk = malloc(sizeof(int) * number_of_process);
-    int *displacements = malloc(sizeof(int) * number_of_process);
-    int count = 0;
-    int remainder = size_arr % number_of_process;
+    int *chunk = (int *)malloc(sizeof(int) * world_size);
+    int *displacements = (int *)malloc(sizeof(int) * world_size);
+    // int count = 0;
+    // int remainder = size_arr % number_of_process;
 
-    int i = 0;
-    for (i; i < number_of_process; i++)
-    {
-        chunk[i] = size_arr / number_of_process;
+    // int i = 0;
+    // for (i; i < number_of_process; i++)
+    // {
+    //     chunk[i] = size_arr / number_of_process;
 
-        if (remainder > 0)
-        {
-            chunk[i]++;
-            remainder--;
-        }
+    //     if (remainder > 0)
+    //     {
+    //         chunk[i]++;
+    //         remainder--;
+    //     }
 
-        displacements[i] = count;
-        count += chunk[i];
-    }
-    int chunk_size = (sizeof(chunk) * sizeof(int));
-    int displacements_size = (sizeof(displacements) * sizeof(int));
+    //     displacements[i] = count;
+    //     count += chunk[i];
+    // }
+    // int chunk_size = (sizeof(chunk) * sizeof(int));
+    // int displacements_size = (sizeof(displacements) * sizeof(int));
+    split_num_between_processes(size_arr, number_of_process, chunk, displacements);
+
+    float *recv_chunk_arr = (float *)malloc(sizeof(float) * chunk[process_id]);
 
     if (process_id == 0)
     {
@@ -89,27 +112,27 @@ int main(int argc, char **argv)
     }
 
     // Scatterv distribute the chunks to all processors
-    MPI_Scatterv(&arr, chunk_size, displacements_size, MPI_UNSIGNED, &recv_chunk_arr, chunk_size, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_chunk_arr, chunk[process_id], MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
-    // bubbleSort(recv_chunk_arr, chunk_size);
+    bubbleSort(recv_chunk_arr, chunk[process_id]);
 
     // show all ordered array
     printf("Ordered chunk array: \n");
-    printArray(recv_chunk_arr, chunk_size);
+    printArray(recv_chunk_arr, chunk[process_id]);
 
     if (process_id == 0)
     {
-        recv_chunk_arr = (int *)malloc(size_arr * sizeof(int)); // clean chunks on root to gather the values
+        recv_chunk_arr = (int *)malloc(number_of_process * sizeof(int)); // clean chunks on root to gather the values
     }
 
     // gatherv collects the chunks from all processors
+    MPI_Gatherv(&recv_chunk_arr, chunk, MPI_UNSIGNED, &recv_arr, chunk, displacements, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
     if (process_id == 0)
     {
-        MPI_Gatherv(&arr, chunk_size, MPI_UNSIGNED, &recv_chunk_arr, chunk_size, displacements_size, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
         // show all unordered array
         printf("Original ordered array: \n");
-        printArray(recv_chunk_arr, chunk_size);
+        printArray(recv_arr, size_arr);
     }
 
     printf("\n");
