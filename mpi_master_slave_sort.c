@@ -90,13 +90,9 @@ int main(int argc, char **argv)
         }
     }
 
-    // imprime lo que recibió cada proceso
-    printf("%d: ", process_id);
-    int j = 0;
-    for (; j < chunk[process_id]; j++)
-    {
-        printf("%c\t", recv_arr[j]);
-    }
+    bubbleSort(chunk, (sizeof(chunk) / sizeof(int)));
+    printArray(chunk, (sizeof(chunk) / sizeof(int)));
+
     printf("\n");
 
     ret = MPI_Finalize();
