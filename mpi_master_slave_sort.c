@@ -15,9 +15,7 @@ void set_random_values_to_arr(int arr[], int arr_size)
         arr[i] = rand_between(0, arr_size);
 }
 
-void split_num_between_processes(int elements_to_split, int num_bins,
-                                 int *num_elements_by_process,
-                                 int *displacements)
+void split_num_between_processes(int elements_to_split, int num_bins, int *num_elements_by_process, int *displacements)
 {
     // Specify how these will be distributed amongst the processes
     int element_position = 0;
@@ -86,7 +84,7 @@ int main(int argc, char **argv)
 
     split_num_between_processes(size_arr, number_of_process, chunk_size, displacements);
 
-    float *recv_chunk_arr = (float *)malloc(sizeof(float) * chunk_size[process_id]);
+    int *recv_chunk_arr = (int *)malloc(sizeof(int) * chunk_size[process_id]);
 
     if (process_id == 0)
     {
@@ -96,7 +94,7 @@ int main(int argc, char **argv)
     }
 
     // Scatterv distribute the chunks to all processors
-    MPI_Scatterv(arr, chunk_size, displacements, MPI_UNSIGNED, recv_chunk_arr, chunk_size[process_id], MPI_UNSIGNED, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(arr, chunk_size, displacements, MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
 
     // bubbleSort(recv_chunk_arr, chunk[process_id]);
 
