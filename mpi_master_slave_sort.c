@@ -52,6 +52,8 @@ int main(int argc, char **argv)
     int *arr = (int *)malloc(size_arr * sizeof(int));
     int *recv_arr = (int *)malloc(size_arr * sizeof(int));
 
+    srand(time(NULL));
+
     // clock_t start_execution, end_execution;
     // double execution_time;
 
@@ -79,30 +81,12 @@ int main(int argc, char **argv)
     set_random_values_to_arr(arr, size_arr);
 
     // evaluate the size chunk and displacements
-    int *chunk = (int *)malloc(sizeof(int) * number_of_process);
+    int *chunk_size = (int *)malloc(sizeof(int) * number_of_process);
     int *displacements = (int *)malloc(sizeof(int) * number_of_process);
-    // int count = 0;
-    // int remainder = size_arr % number_of_process;
 
-    // int i = 0;
-    // for (i; i < number_of_process; i++)
-    // {
-    //     chunk[i] = size_arr / number_of_process;
+    split_num_between_processes(size_arr, number_of_process, chunk_size, displacements);
 
-    //     if (remainder > 0)
-    //     {
-    //         chunk[i]++;
-    //         remainder--;
-    //     }
-
-    //     displacements[i] = count;
-    //     count += chunk[i];
-    // }
-    // int chunk_size = (sizeof(chunk) * sizeof(int));
-    // int displacements_size = (sizeof(displacements) * sizeof(int));
-    split_num_between_processes(size_arr, number_of_process, chunk, displacements);
-
-    float *recv_chunk_arr = (float *)malloc(sizeof(float) * chunk[process_id]);
+    float *recv_chunk_arr = (float *)malloc(sizeof(float) * chunk_size[process_id]);
 
     if (process_id == 0)
     {
@@ -112,7 +96,7 @@ int main(int argc, char **argv)
     }
 
     // Scatterv distribute the chunks to all processors
-    MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_chunk_arr, chunk[process_id], MPI_UNSIGNED, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(arr, chunk_size, displacements, MPI_UNSIGNED, recv_chunk_arr, chunk_size[process_id], MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
     // bubbleSort(recv_chunk_arr, chunk[process_id]);
 
