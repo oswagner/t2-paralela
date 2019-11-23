@@ -114,11 +114,17 @@ int main(int argc, char **argv)
     // Scatterv distribute the chunks to all processors
     MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_chunk_arr, chunk[process_id], MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
-    bubbleSort(recv_chunk_arr, chunk[process_id]);
+    // bubbleSort(recv_chunk_arr, chunk[process_id]);
 
     // show all ordered array
     printf("Ordered chunk array: \n");
-    printArray(recv_chunk_arr, chunk[process_id]);
+    printf("chunk[process_id] = %d", chunk[process_id]);
+    int a = 0;
+    for (a; a < chunk[process_id]; a++)
+        printf("%d ", recv_chunk_arr[a]);
+    printf("\n");
+
+    // printArray(recv_chunk_arr, chunk[process_id]);
 
     if (process_id == 0)
     {
