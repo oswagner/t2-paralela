@@ -102,20 +102,22 @@ int main(int argc, char **argv)
     bubbleSort(recv_chunk_arr, chunk_size[process_id]);
     printArray(recv_chunk_arr, chunk_size[process_id]);
 
-    // if (process_id == 0)
-    // {
-    //     recv_chunk_arr = (int *)malloc(number_of_process * sizeof(int)); // clean chunks on root to gather the values
-    // }
+    if (process_id == 0)
+    {
+        recv_chunk_arr = (int *)malloc(sizeof(int) * number_of_process); // clean chunks on root to gather the values
+    }
+
+    // MPI_Gather(&sub_avg, 1, MPI_FLOAT, sub_avgs, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
     // // gatherv collects the chunks from all processors
-    // MPI_Gatherv(&recv_chunk_arr, chunk, MPI_UNSIGNED, &recv_arr, chunk, displacements, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(&recv_chunk_arr, chunk_size, MPI_INT, recv_arr, (size_arr * sizeof(int)), displacements, MPI_INT, 0, MPI_COMM_WORLD);
 
-    // if (process_id == 0)
-    // {
-    //     // show all unordered array
-    //     printf("Original ordered array: \n");
-    //     printArray(recv_arr, size_arr);
-    // }
+    if (process_id == 0)
+    {
+        // show all unordered array
+        printf("Original ordered array: \n");
+        printArray(recv_arr, size_arr);
+    }
 
     printf("\n");
 
