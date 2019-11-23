@@ -78,6 +78,8 @@ int main(int argc, char **argv)
         displacements[i] = count;
         count += chunk[i];
     }
+    int chunk_size = (sizeof(chunk) * sizeof(int));
+    int displacements_size = (sizeof(displacements) * sizeof(int));
 
     if (process_id == 0)
     {
@@ -87,8 +89,6 @@ int main(int argc, char **argv)
     }
 
     // Scatterv distribute the chunks to all processors
-    int chunk_size = (sizeof(chunk) * sizeof(int));
-    int displacements_size = (sizeof(displacements) * sizeof(int));
     MPI_Scatterv(&arr, chunk_size, displacements_size, MPI_UNSIGNED, &recv_chunk_arr, chunk_size, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
     bubbleSort(recv_chunk_arr, (sizeof(recv_chunk_arr) * sizeof(int)));
@@ -103,10 +103,10 @@ int main(int argc, char **argv)
     }
 
     // gatherv collects the chunks from all processors
-    MPI_Gatherv(&arr, chunk_size, MPI_UNSIGNED, &recv_chunk_arr, chunk_size, displacements_size, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
     if (process_id == 0)
     {
+        MPI_Gatherv(&arr, chunk_size, MPI_UNSIGNED, &recv_chunk_arr, chunk_size, displacements_size, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
         // show all unordered array
         printf("Original ordered array: \n");
         printArray(recv_chunk_arr, (sizeof(recv_chunk_arr) * sizeof(int)));
