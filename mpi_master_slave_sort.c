@@ -92,9 +92,10 @@ int main(int argc, char **argv)
 
     // imprime lo que recibió cada proceso
     printf("%d: ", process_id);
-    for (int i = 0; i < chunk[process_id]; i++)
+    int j = 0;
+    for (; j < chunk[process_id]; j++)
     {
-        printf("%c\t", recv_arr[i]);
+        printf("%c\t", recv_arr[j]);
     }
     printf("\n");
 
