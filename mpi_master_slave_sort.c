@@ -92,14 +92,19 @@ int main(int argc, char **argv)
     printf("Ordered chunk array: \n");
     printArray(recv_chunk_arr, (sizeof(recv_chunk_arr) * sizeof(int)));
 
+    if (process_id == 0)
+    {
+        recv_chunk_arr = (int *)malloc(size_arr * sizeof(int)); // clean chunks on root to gather the values
+    }
+
     // gatherv collects the chunks from all processors
-    MPI_Gatherv(&arr, chunk, MPI_UNSIGNED, &recv_arr, chunk, displacements, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(&arr, chunk, MPI_UNSIGNED, &recv_chunk_arr, chunk, displacements, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
     if (process_id == 0)
     {
         // show all unordered array
         printf("Original ordered array: \n");
-        printArray(recv_arr, (sizeof(recv_arr) * sizeof(int)));
+        printArray(arr, (sizeof(arr) * sizeof(int)));
     }
 
     printf("\n");
