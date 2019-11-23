@@ -84,9 +84,9 @@ int main(int argc, char **argv)
     printArray(arr, (sizeof(arr) * sizeof(int)));
 
     // Scatterv distribute the chunks to all processors
-    MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_chunk_arr, (size_arr * sizeof(int)), MPI_UNSIGNED, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(arr, chunk, displacements, MPI_UNSIGNED, recv_chunk_arr, (recv_chunk_arr * sizeof(int)), MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
-    bubbleSort(chunk, (sizeof(chunk) * sizeof(int)));
+    bubbleSort(recv_chunk_arr, (sizeof(recv_chunk_arr) * sizeof(int)));
 
     // show all ordered array
     printf("Ordered chunk array: \n");
