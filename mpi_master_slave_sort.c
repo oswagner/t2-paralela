@@ -10,6 +10,7 @@
 
 void set_random_values_to_arr(int arr[], int arr_size)
 {
+    srand(time(NULL));
     int i = 0;
     for (i; i < arr_size; i++)
         arr[i] = rand_between(0, arr_size);
@@ -101,10 +102,9 @@ int main(int argc, char **argv)
     unsigned int total;
 
     int size_arr = atoi(argv[1]);
+    printf("array size %d", size_arr);
     int *arr = (int *)malloc(size_arr * sizeof(int));
     int *recv_arr = (int *)malloc(size_arr * sizeof(int));
-
-    srand(time(NULL));
 
     // clock_t start_execution, end_execution;
     // double execution_time;
@@ -113,21 +113,15 @@ int main(int argc, char **argv)
 
     ret = MPI_Init(&argc, &argv);
     if (ret != MPI_SUCCESS)
-    {
         mpi_err(1, "MPI_Init");
-    }
 
     ret = MPI_Comm_rank(MPI_COMM_WORLD, &process_id);
     if (ret != MPI_SUCCESS)
-    {
         mpi_err(1, "MPI_Comm_rank");
-    }
 
     ret = MPI_Comm_size(MPI_COMM_WORLD, &number_of_process);
     if (ret != MPI_SUCCESS)
-    {
         mpi_err(1, "MPI_Comm_size");
-    }
 
     // generate random values in the array
     set_random_values_to_arr(arr, size_arr);
@@ -144,7 +138,7 @@ int main(int argc, char **argv)
     {
         // show all unordered array
         printf("Original array: \n");
-        printArray(arr, (sizeof(arr) * sizeof(int)));
+        printArray(arr, size_arr);
     }
 
     // Scatterv distribute the chunks to all processors
@@ -168,12 +162,6 @@ int main(int argc, char **argv)
         // show all unordered array
         printf("Original ordered array: \n");
         printArray(recv_arr, size_arr);
-        // group_chunk(recv_chunk_arr, chunk_size, number_of_process, recv_arr);
-        // m - size of A
-        // n - size of B
-        // size of C array must be equal or greater than
-        // m + n
-        // merge(int m, int n, int A[], recv_arr, recv_arr);
     }
 
     printf("\n");
@@ -186,3 +174,5 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
+72 42 70 19 62 28 99 70 7 97 49 49 5 37 36 53 27 98 50 4 55 78 12 6 48 100 5 87 50 2 80 88
