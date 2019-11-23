@@ -79,19 +79,21 @@ int main(int argc, char **argv)
     }
 
     // show all unordered array
+    print("Original array: \n");
     printArray(arr, (sizeof(arr) * sizeof(int)));
 
     // Scatterv distribute the chunks to all process
-    // MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_arr, (size_arr * sizeof(int)), MPI_UNSIGNED, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(&arr, chunk, displacements, MPI_UNSIGNED, &recv_arr, (size_arr * sizeof(int)), MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
     // if (process_id == 0)
     // {
 
     // }
 
-    bubbleSort(arr, (sizeof(arr) * sizeof(int)));
+    bubbleSort(chunk, (sizeof(chunk) * sizeof(int)));
 
     // show all ordered array
+    print("Ordered array: \n");
     printArray(recv_arr, (sizeof(recv_arr) * sizeof(int)));
 
     printf("\n");
