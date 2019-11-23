@@ -79,8 +79,8 @@ int main(int argc, char **argv)
     set_random_values_to_arr(arr, size_arr);
 
     // evaluate the size chunk and displacements
-    int *chunk = (int *)malloc(sizeof(int) * world_size);
-    int *displacements = (int *)malloc(sizeof(int) * world_size);
+    int *chunk = (int *)malloc(sizeof(int) * number_of_process);
+    int *displacements = (int *)malloc(sizeof(int) * number_of_process);
     // int count = 0;
     // int remainder = size_arr % number_of_process;
 
