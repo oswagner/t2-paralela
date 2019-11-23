@@ -79,7 +79,7 @@ int main(int argc, char **argv)
     }
 
     // show all unordered array
-    print("Original array: \n");
+    printf("Original array: \n");
     printArray(arr, (sizeof(arr) * sizeof(int)));
 
     // Scatterv distribute the chunks to all process
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
     bubbleSort(chunk, (sizeof(chunk) * sizeof(int)));
 
     // show all ordered array
-    print("Ordered array: \n");
+    printf("Ordered array: \n");
     printArray(recv_arr, (sizeof(recv_arr) * sizeof(int)));
 
     printf("\n");
