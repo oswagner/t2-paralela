@@ -126,20 +126,20 @@ int main(int argc, char **argv)
 
     // printArray(recv_chunk_arr, chunk[process_id]);
 
-    if (process_id == 0)
-    {
-        recv_chunk_arr = (int *)malloc(number_of_process * sizeof(int)); // clean chunks on root to gather the values
-    }
+    // if (process_id == 0)
+    // {
+    //     recv_chunk_arr = (int *)malloc(number_of_process * sizeof(int)); // clean chunks on root to gather the values
+    // }
 
-    // gatherv collects the chunks from all processors
-    MPI_Gatherv(&recv_chunk_arr, chunk, MPI_UNSIGNED, &recv_arr, chunk, displacements, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
+    // // gatherv collects the chunks from all processors
+    // MPI_Gatherv(&recv_chunk_arr, chunk, MPI_UNSIGNED, &recv_arr, chunk, displacements, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
-    if (process_id == 0)
-    {
-        // show all unordered array
-        printf("Original ordered array: \n");
-        printArray(recv_arr, size_arr);
-    }
+    // if (process_id == 0)
+    // {
+    //     // show all unordered array
+    //     printf("Original ordered array: \n");
+    //     printArray(recv_arr, size_arr);
+    // }
 
     printf("\n");
 
