@@ -34,59 +34,59 @@ void split_num_between_processes(int elements_to_split, int num_bins, int *num_e
     num_elements_by_process[num_bins - 1] = elements_to_split - element_position;
 }
 // float *array, int *weights_array, int num_elements
-void group_chunk(recv_chunk_arr, chunk_size, number_of_process, recv_arr)
-{
-    float sum = 0.f;
-    float sum_weights = 0.f;
-    int i;
-    for (i = 0; i < num_elements; i++)
-    {
-        sum += weights_array[i] * array[i];
-        sum_weights += weights_array[i];
-    }
-}
+// void group_chunk(recv_chunk_arr, chunk_size, number_of_process, recv_arr)
+// {
+//     float sum = 0.f;
+//     float sum_weights = 0.f;
+//     int i;
+//     for (i = 0; i < num_elements; i++)
+//     {
+//         sum += weights_array[i] * array[i];
+//         sum_weights += weights_array[i];
+//     }
+// }
 
 // m - size of A
 // n - size of B
 // size of C array must be equal or greater than
 // m + n
-void merge(int m, int n, int A[], int B[], int C[])
-{
-    int i, j, k;
-    i = 0;
-    j = 0;
-    k = 0;
-    while (i < m && j < n)
-    {
-        if (A[i] <= B[j])
-        {
-            C[k] = A[i];
-            i++;
-        }
-        else
-        {
-            C[k] = B[j];
-            j++;
-        }
-        k++;
-    }
-    if (i < m)
-    {
-        for (int p = i; p < m; p++)
-        {
-            C[k] = A[p];
-            k++;
-        }
-    }
-    else
-    {
-        for (int p = j; p < n; p++)
-        {
-            C[k] = B[p];
-            k++;
-        }
-    }
-}
+// void merge(int m, int n, int A[], int B[], int C[])
+// {
+//     int i, j, k;
+//     i = 0;
+//     j = 0;
+//     k = 0;
+//     while (i < m && j < n)
+//     {
+//         if (A[i] <= B[j])
+//         {
+//             C[k] = A[i];
+//             i++;
+//         }
+//         else
+//         {
+//             C[k] = B[j];
+//             j++;
+//         }
+//         k++;
+//     }
+//     if (i < m)
+//     {
+//         for (int p = i; p < m; p++)
+//         {
+//             C[k] = A[p];
+//             k++;
+//         }
+//     }
+//     else
+//     {
+//         for (int p = j; p < n; p++)
+//         {
+//             C[k] = B[p];
+//             k++;
+//         }
+//     }
+// }
 
 int main(int argc, char **argv)
 {
