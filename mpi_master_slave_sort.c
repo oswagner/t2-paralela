@@ -33,6 +33,60 @@ void split_num_between_processes(int elements_to_split, int num_bins, int *num_e
     displacements[num_bins - 1] = element_position;
     num_elements_by_process[num_bins - 1] = elements_to_split - element_position;
 }
+// float *array, int *weights_array, int num_elements
+void group_chunk(recv_chunk_arr, chunk_size, number_of_process, recv_arr)
+{
+    float sum = 0.f;
+    float sum_weights = 0.f;
+    int i;
+    for (i = 0; i < num_elements; i++)
+    {
+        sum += weights_array[i] * array[i];
+        sum_weights += weights_array[i];
+    }
+}
+
+// m - size of A
+// n - size of B
+// size of C array must be equal or greater than
+// m + n
+void merge(int m, int n, int A[], int B[], int C[])
+{
+    int i, j, k;
+    i = 0;
+    j = 0;
+    k = 0;
+    while (i < m && j < n)
+    {
+        if (A[i] <= B[j])
+        {
+            C[k] = A[i];
+            i++;
+        }
+        else
+        {
+            C[k] = B[j];
+            j++;
+        }
+        k++;
+    }
+    if (i < m)
+    {
+        for (int p = i; p < m; p++)
+        {
+            C[k] = A[p];
+            k++;
+        }
+    }
+    else
+    {
+        for (int p = j; p < n; p++)
+        {
+            C[k] = B[p];
+            k++;
+        }
+    }
+}
 
 int main(int argc, char **argv)
 {
@@ -105,17 +159,21 @@ int main(int argc, char **argv)
     if (process_id == 0)
         recv_chunk_arr = (int *)malloc(sizeof(int) * number_of_process); // clean chunks on root to gather the values
 
-    // MPI_Gather(&sub_avg, 1, MPI_FLOAT, sub_avgs, 1, MPI_FLOAT, 0, MPI_COMM_WORLD);
-
     // // gatherv collects the chunks from all processors
-    // MPI_Gatherv(&recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_arr, (size_arr * sizeof(int)), displacements, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Gather(&recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_arr, (size_arr * sizeof(int)), MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_arr, chunk_size, displacements, MPI_INT, 0, MPI_COMM_WORLD);
+    // MPI_Gather(&arr, chunk_size, MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
 
     if (process_id == 0)
     {
         // show all unordered array
         printf("Original ordered array: \n");
         printArray(recv_arr, size_arr);
+        // group_chunk(recv_chunk_arr, chunk_size, number_of_process, recv_arr);
+        // m - size of A
+        // n - size of B
+        // size of C array must be equal or greater than
+        // m + n
+        // merge(int m, int n, int A[], recv_arr, recv_arr);
     }
 
     printf("\n");
