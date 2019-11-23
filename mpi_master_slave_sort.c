@@ -102,9 +102,9 @@ int main(int argc, char **argv)
 
     // show all ordered array
     printf("Ordered chunk array: \n");
-    printf("chunk[process_id] = %d", chunk[process_id]);
+    printf("chunk[process_id] = %d", chunk_size[process_id]);
     int a = 0;
-    for (a; a < chunk[process_id]; a++)
+    for (a; a < chunk_size[process_id]; a++)
         printf("%d ", recv_chunk_arr[a]);
     printf("\n");
 
