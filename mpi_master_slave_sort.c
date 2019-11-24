@@ -3,7 +3,6 @@
 #include <limits.h>
 #include <unistd.h>
 #include <time.h>
-#include <string.h>
 #include "mpi.h"
 #include "utils.h"
 #include "bubble_sort.h"
@@ -26,7 +25,7 @@ void printArrayFile(int arr[], int size, char *hostname, int process_id)
 
     snprintf(filename, 100, "/out/array_%s_%d.txt", hostname, process_id);
 
-    output_file = fopen(filename, "a+");
+    output_file = fopen(filename, "w+");
     int i;
     fprintf(output_file, "%s\n\t", "Vetor final ordenado:");
     for (i = 0; i < size; i++)
