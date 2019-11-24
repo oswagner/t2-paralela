@@ -152,7 +152,7 @@ int main(int argc, char **argv)
         recv_chunk_arr = (int *)malloc(sizeof(int) * number_of_process); // clean chunks on root to gather the values
 
     // // gatherv collects the chunks from all processors
-    MPI_Gatherv(&recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_arr, size_arr, displacements, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(recv_chunk_arr, chunk_size[process_id], MPI_INT, &recv_arr, size_arr, displacements, MPI_INT, 0, MPI_COMM_WORLD);
     // MPI_Gather(&arr, chunk_size, MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
 
     if (process_id == 0)
