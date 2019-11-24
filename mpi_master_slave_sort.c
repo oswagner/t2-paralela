@@ -129,10 +129,9 @@ int main(int argc, char **argv)
     int *chunk_size = (int *)malloc(sizeof(int) * number_of_process);
     int *displacements = (int *)malloc(sizeof(int) * number_of_process);
 
-    split_num_between_processes(size_arr, number_of_process, chunk_size, displacements);
+    split_num_between_processes(arr, number_of_process, chunk_size, displacements);
 
     int *recv_chunk_arr = (int *)malloc(sizeof(int) * chunk_size[process_id]);
-    int *recv_gather_arr = (int *)malloc(sizeof(int) * number_of_process);
 
     if (process_id == 0)
     {
@@ -142,7 +141,7 @@ int main(int argc, char **argv)
     }
 
     // Scatterv distribute the chunks to all processors
-    MPI_Scatterv(arr, chunk_size, displacements, MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(arr, chunk_size[process_id], displacements, MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
     // MPI_Scatterv(void *sendbuff, int sendcounts[nproc], int offsets[nproc],
     //             MPI_Datatype sendtype, void *recvbuff, int recvcount,
     //             MPI_Datatype recvtype, int root, MPI_Comm comm)
@@ -156,24 +155,16 @@ int main(int argc, char **argv)
         recv_chunk_arr = (int *)malloc(sizeof(int) * number_of_process); // clean chunks on root to gather the values
 
     // // gatherv collects the chunks from all processors
-    MPI_Gatherv(recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_gather_arr, chunk_size, displacements, MPI_INT, 0, MPI_COMM_WORLD);
-    // MPI_Gather(&arr, chunk_size, MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
-    // MPI_Gatherv(void *sendbuff, int sendcount, MPI_Datatype sendtype,
-    //             void *recvbuff, int recvcounts[nproc], int offsets[nproc],
-    //             MPI_Datatype recvtype, int root, MPI_Comm comm);
+    MPI_Gatherv(recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_chunk_arr, chunk_size, displacements, MPI_INT, 0, MPI_COMM_WORLD);
 
     if (process_id == 0)
     {
 
         printf("received values");
-        printf(recv_gather_arr[0]);
-        printf(recv_gather_arr[1]);
-        printf(recv_gather_arr[2]);
-        printf(recv_gather_arr[3]);
-        printf(recv_gather_arr[4]);
+        printf(recv_chunk_arr[0]);
         // show all unordered array
         // printf("Original ordered array: \n");
-        // printArray(recv_gather_arr, chunk_size);
+        // printArray(recv_chunk_arr, chunk_size);
     }
 
     printf("\n");
