@@ -21,9 +21,9 @@ void set_random_values_to_arr(int arr[], int arr_size)
 void printArrayFile(int arr[], int size, char *hostname, int process_id)
 {
     FILE *output_file;
-    char filename[100] = "";
+    char filename[200];
 
-    snprintf(filename, 100, "/out/array_%s_%d.txt", hostname, process_id);
+    snprintf(filename, 200, "/out/array_%s_%d.txt", hostname, process_id);
 
     output_file = fopen(filename, "w+");
     int i;
@@ -103,7 +103,6 @@ int main(int argc, char **argv)
     printf("Sorted at [%s] process_id [%d] \n", hostname, process_id);
     // sort array
     bubbleSort(chunk, chunk_size);
-    printArrayFile(chunk, chunk_size, hostname, process_id);
     // printArray(chunk, chunk_size);
 
     // // gatherv collects the chunks from all processors
@@ -148,11 +147,11 @@ int main(int argc, char **argv)
         printf("n= %d \n", size_arr);
         printf("number_of_process= %d \n", number_of_process);
         printf("time [s]=%g \n", (end_time - start_time));
-        printArrayFile(arr, size_arr, hostname, process_id);
 
         for (i = 0; i < size_arr; i++)
         {
             printf("%d ", result[i]);
+            printArrayFile(result, size_arr, hostname, process_id);
         }
 
         free(result);
