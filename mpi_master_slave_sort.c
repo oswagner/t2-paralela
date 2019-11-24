@@ -24,7 +24,7 @@ void printArrayFile(int arr[], int size, char *hostname, int process_id)
     FILE *output_file;
     char filename[100] = "";
 
-    sprintf(filename, "/out/array_%s_%d.txt", hostname, process_id);
+    snprintf(filename, 100, "/out/array_%s_%d.txt", hostname, process_id);
 
     output_file = fopen(filename, "a+");
     int i;
