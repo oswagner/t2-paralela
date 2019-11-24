@@ -25,7 +25,7 @@ void printArrayFile(int arr[], int size, char *hostname, int process_id)
 
     // snprintf(filename, 200, "/out/array_%s_%d.txt", hostname, process_id);
 
-        // output_file = fopen(filename, "w+");
+    // output_file = fopen(filename, "w+");
     output_file = fopen("teste.txt", "w+");
     int i;
     fprintf(output_file, "%s\n\t", "Vetor final ordenado:");
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
         set_random_values_to_arr(arr, size_arr);
         // show all unordered array
         printf("Original array: \n");
-        // printArray(arr, size_arr);
+        printArray(arr, size_arr);
         printArrayFile(arr, size_arr, hostname, process_id);
     }
 
@@ -152,7 +152,7 @@ int main(int argc, char **argv)
         for (i = 0; i < size_arr; i++)
         {
             printf("%d ", result[i]);
-            printArrayFile(result, size_arr, hostname, process_id);
+            // printArrayFile(result, size_arr, hostname, process_id);
         }
 
         free(result);
