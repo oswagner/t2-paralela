@@ -142,7 +142,7 @@ int main(int argc, char **argv)
     }
 
     // Scatterv distribute the chunks to all processors
-    MPI_Scatterv(arr, chunk_size, displacements[process_id], MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(arr, chunk_size, displacements, MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
     // MPI_Scatterv(void *sendbuff, int sendcounts[nproc], int offsets[nproc],
     //             MPI_Datatype sendtype, void *recvbuff, int recvcount,
     //             MPI_Datatype recvtype, int root, MPI_Comm comm)
@@ -156,7 +156,7 @@ int main(int argc, char **argv)
         recv_chunk_arr = (int *)malloc(sizeof(int) * number_of_process); // clean chunks on root to gather the values
 
     // // gatherv collects the chunks from all processors
-    MPI_Gatherv(recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_gather_arr, chunk_size, displacements[process_id], MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_gather_arr, chunk_size, displacements, MPI_INT, 0, MPI_COMM_WORLD);
     // MPI_Gather(&arr, chunk_size, MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
     // MPI_Gatherv(void *sendbuff, int sendcount, MPI_Datatype sendtype,
     //             void *recvbuff, int recvcounts[nproc], int offsets[nproc],
