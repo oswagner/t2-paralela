@@ -53,3 +53,7 @@ https://www.geeksforgeeks.org/int_max-int_min-cc-applications/
 
 evaluate times in MPI
 https://www.mcs.anl.gov/research/projects/mpi/tutorial/gropp/node139.html
+
+
+mpi gather doc ref
+http://www.cs.kent.edu/~farrell/cc08/lectures/mpi_vops.pdf
