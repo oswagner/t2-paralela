@@ -166,19 +166,7 @@ int main(int argc, char **argv)
     {
         // show all unordered array
         // printf("Original ordered array: \n");
-        // printArray(recv_arr, chunk_size);
-        int i, j, z;
-        i = j = z = 0;
-        int size_i = sizeof(recv_gather_arr) / sizeof(recv_gather_arr[0]);
-        int size_j;
-        for (i; i < size_i; i++)
-        {
-            int *values = recv_gather_arr[i];
-            size_j = sizeof(values) / sizeof(values[0]);
-            for (j; j < size_j; j++)
-            {
-            }
-        }
+        printArray(recv_gather_arr, chunk_size);
     }
 
     printf("\n");
