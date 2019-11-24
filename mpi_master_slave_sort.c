@@ -18,12 +18,15 @@ void set_random_values_to_arr(int arr[], int arr_size)
         arr[i] = rand_between(0, arr_size);
 }
 
-void printArrayFile(int arr[], int size, char *hostname, int process_id)
+void printArrayFile(int arr[], int size, char *hostname, int process_id, int sorted)
 {
     FILE *output_file;
     char filename[200];
 
     snprintf(filename, 200, "./out/array_%s_%d.txt", hostname, process_id);
+    if (sorted == 1)
+        snprintf(filename, 200, "./out/sorted_array_%s_%d.txt", hostname, process_id);
+
     output_file = fopen(filename, "a+");
 
     int i;
@@ -74,7 +77,7 @@ int main(int argc, char **argv)
         // show all unordered array
         printf("Original array: \n");
         printArray(arr, size_arr);
-        printArrayFile(arr, size_arr, hostname, process_id);
+        printArrayFile(arr, size_arr, hostname, process_id, 0);
     }
 
     // evaluate the size chunk and displacements
@@ -101,11 +104,13 @@ int main(int argc, char **argv)
 
     // show all ordered array
     printf("Sorted at [%s] process_id [%d] \n", hostname, process_id);
+    printArrayFile(chunk, chunk_size, hostname, process_id, 0);
     // sort array
     bubbleSort(chunk, chunk_size);
     // printArray(chunk, chunk_size);
+    printArrayFile(chunk, chunk_size, hostname, process_id, 1);
 
-    // // gatherv collects the chunks from all processors
+    // gatherv collects the chunks from all processors
     MPI_Gatherv(chunk, chunk_size, MPI_INT, arr, send_counter, displacements, MPI_INT, 0, MPI_COMM_WORLD);
 
     if (process_id == 0) // merge all chunks back in result array
@@ -151,7 +156,7 @@ int main(int argc, char **argv)
         for (i = 0; i < size_arr; i++)
         {
             printf("%d ", result[i]);
-            // printArrayFile(result, size_arr, hostname, process_id);
+            printArrayFile(result, size_arr, hostname, process_id, 1);
         }
 
         free(result);
