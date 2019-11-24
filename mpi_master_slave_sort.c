@@ -161,7 +161,7 @@ int main(int argc, char **argv)
     {
         // show all unordered array
         printf("Original ordered array: \n");
-        printArray(recv_arr, size_arr);
+        printArray(&recv_arr, size_arr);
     }
 
     printf("\n");
