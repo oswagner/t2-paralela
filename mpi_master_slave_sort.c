@@ -24,19 +24,17 @@ void printArrayFile(int arr[], int size, char *hostname, int process_id)
     char filename[200];
 
     snprintf(filename, 200, "./out/array_%s_%d.txt", hostname, process_id);
-    printf("%s", filename);
+    output_file = fopen(filename, "a+");
 
-    // output_file = fopen(filename, "w+");
-    // // output_file = fopen("teste.txt", "w+");
-    // int i;
-    // fprintf(output_file, "%s\n\t", "Vetor final ordenado:");
-    // for (i = 0; i < size; i++)
-    // {
-    //     fprintf(output_file, "%d, ", arr[i]);
-    // }
-    // fprintf(output_file, "\n\n");
-    // printf("\n\n");
-    // fclose(output_file);
+    int i;
+    fprintf(output_file, "%s \n", "================== Values ==================");
+    for (i = 0; i < size; i++)
+    {
+        fprintf(output_file, "%d, ", arr[i]);
+    }
+    fprintf(output_file, "\n\n");
+    printf("\n\n");
+    fclose(output_file);
 }
 
 int main(int argc, char **argv)
