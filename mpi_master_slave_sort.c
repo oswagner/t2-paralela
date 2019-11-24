@@ -27,7 +27,7 @@ void printArrayFile(int arr[], int size, char *hostname, int process_id, int sor
     if (sorted == 1)
         snprintf(filename, 200, "./out/sorted_array_%s_%d.txt", hostname, process_id);
 
-    output_file = fopen(filename, "a+");
+    output_file = fopen(filename, "w+");
 
     int i;
     fprintf(output_file, "%s \n", "================== Values ==================");
@@ -152,11 +152,11 @@ int main(int argc, char **argv)
         printf("n= %d \n", size_arr);
         printf("number_of_process= %d \n", number_of_process);
         printf("time [s]=%g \n", (end_time - start_time));
+        printArrayFile(result, size_arr, hostname, process_id, 1);
 
         for (i = 0; i < size_arr; i++)
         {
             printf("%d ", result[i]);
-            printArrayFile(result, size_arr, hostname, process_id, 1);
         }
 
         free(result);
