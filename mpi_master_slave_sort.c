@@ -102,7 +102,6 @@ int main(int argc, char **argv)
     unsigned int total;
 
     int size_arr = atoi(argv[1]);
-    printf("array size %d", size_arr);
     int *arr = (int *)malloc(size_arr * sizeof(int));
     int *recv_arr = (int *)malloc(size_arr * sizeof(int));
 
@@ -138,15 +137,14 @@ int main(int argc, char **argv)
     {
         // show all unordered array
         printf("Original array: \n");
-        printArray(arr, size_arr);
+        printArray(&arr, size_arr);
     }
 
     // Scatterv distribute the chunks to all processors
     MPI_Scatterv(arr, chunk_size, displacements, MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
 
     // show all ordered array
-    printf("Ordered chunk array: \n");
-    printf("chunk size = %d \n", chunk_size[process_id]);
+    printf("Processado no [%s] rank %d\n", hostname, process_id);
     bubbleSort(recv_chunk_arr, chunk_size[process_id]);
     printArray(recv_chunk_arr, chunk_size[process_id]);
 
