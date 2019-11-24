@@ -2,9 +2,10 @@
 #include <stdio.h>
 #include <limits.h>
 #include <unistd.h>
+#include <time.h>
+#include <string.h>
 #include "mpi.h"
 #include "utils.h"
-#include <time.h>
 #include "bubble_sort.h"
 
 #define rand_between(min, max) \
@@ -16,6 +17,32 @@ void set_random_values_to_arr(int arr[], int arr_size)
     int i = 0;
     for (i; i < arr_size; i++)
         arr[i] = rand_between(0, arr_size);
+}
+
+void printArrayFile(int arr[], int size, char *hostname, int process_id)
+{
+    FILE *output_file;
+    char path[] = "/out/";
+    char extension[] = ".txt";
+    char filename[50] = "";
+    char process_name[10] = "";
+
+    itoa(process_id, process_name, 10);
+
+    strncpy(path, hostname, sizeof(hostname));
+    strncpy(path, process_name, sizeof(process_name));
+    strncpy(path, extension, sizeof(extension));
+
+    output_file = fopen(path, "a+");
+    int i;
+    fprintf(output_file, "%s\n\t", "Vetor final ordenado:");
+    for (i = 0; i < size; i++)
+    {
+        fprintf(output_file, "%d, ", arr[i]);
+    }
+    fprintf(output_file, "\n\n");
+    printf("\n\n");
+    fclose(output_file);
 }
 
 int main(int argc, char **argv)
@@ -55,6 +82,7 @@ int main(int argc, char **argv)
         // show all unordered array
         printf("Original array: \n");
         // printArray(arr, size_arr);
+        printArrayFile(arr, size_arr, hostname, process_id);
     }
 
     // evaluate the size chunk and displacements
@@ -83,6 +111,7 @@ int main(int argc, char **argv)
     printf("Sorted at [%s] process_id [%d] \n", hostname, process_id);
     // sort array
     bubbleSort(chunk, chunk_size);
+    printArrayFile(chunk, chunk_size, hostname, process_id);
     // printArray(chunk, chunk_size);
 
     // // gatherv collects the chunks from all processors
@@ -127,6 +156,7 @@ int main(int argc, char **argv)
         printf("n= %d \n", size_arr);
         printf("number_of_process= %d \n", number_of_process);
         printf("time [s]=%g \n", (end_time - start_time));
+        printArrayFile(arr, size_arr, hostname, process_id);
 
         for (i = 0; i < size_arr; i++)
         {
