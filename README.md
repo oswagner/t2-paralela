@@ -44,6 +44,12 @@ mpi_gatherv = https://www.mpi-forum.org/docs/mpi-1.1/mpi-11-html/node70.html
 mpi_scatterv = https://www.mpi-forum.org/docs/mpi-3.1/mpi31-report/node106.htm#Node106
 
 
-se não rolar de usar o scatterv
+http://abd-tech.blogspot.com/2011/05/implementation-of-parallel-odd-even.html
 
-https://www.geeksforgeeks.org/sum-of-an-array-using-mpi/
+https://www.mjr19.org.uk/courses/MPI/MPI.pdf
+
+validar valores inteiros
+https://www.geeksforgeeks.org/int_max-int_min-cc-applications/
+
+evaluate times in MPI
+https://www.mcs.anl.gov/research/projects/mpi/tutorial/gropp/node139.html

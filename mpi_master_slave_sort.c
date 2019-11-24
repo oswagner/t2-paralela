@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <limits.h>
+#include <unistd.h>
 #include "mpi.h"
 #include "utils.h"
 #include <time.h>
@@ -13,81 +15,8 @@ void set_random_values_to_arr(int arr[], int arr_size)
     srand(time(NULL));
     int i = 0;
     for (i; i < arr_size; i++)
-        arr[i] = rand_between(0, arr_size);
+        arr[i] = (rand_between(0, arr_size) % arr_size);
 }
-
-void split_num_between_processes(int elements_to_split, int num_bins, int *num_elements_by_process, int *displacements)
-{
-    // Specify how these will be distributed amongst the processes
-    int element_position = 0;
-    int i;
-    for (i = 0; i < num_bins - 1; i++)
-    {
-        displacements[i] = element_position;
-        // Integer division
-        num_elements_by_process[i] = elements_to_split / num_bins;
-        element_position += elements_to_split / num_bins;
-    }
-    // Assign the remaining elements to the last process.  If num_bins does
-    // not divide elements_to_split exactly, the last process will be assigned
-    // the more elements that the others.
-    displacements[num_bins - 1] = element_position;
-    num_elements_by_process[num_bins - 1] = elements_to_split - element_position;
-}
-// float *array, int *weights_array, int num_elements
-// void group_chunk(recv_chunk_arr, chunk_size, number_of_process, recv_arr)
-// {
-//     float sum = 0.f;
-//     float sum_weights = 0.f;
-//     int i;
-//     for (i = 0; i < num_elements; i++)
-//     {
-//         sum += weights_array[i] * array[i];
-//         sum_weights += weights_array[i];
-//     }
-// }
-
-// m - size of A
-// n - size of B
-// size of C array must be equal or greater than
-// m + n
-// void merge(int m, int n, int A[], int B[], int C[])
-// {
-//     int i, j, k;
-//     i = 0;
-//     j = 0;
-//     k = 0;
-//     while (i < m && j < n)
-//     {
-//         if (A[i] <= B[j])
-//         {
-//             C[k] = A[i];
-//             i++;
-//         }
-//         else
-//         {
-//             C[k] = B[j];
-//             j++;
-//         }
-//         k++;
-//     }
-//     if (i < m)
-//     {
-//         for (int p = i; p < m; p++)
-//         {
-//             C[k] = A[p];
-//             k++;
-//         }
-//     }
-//     else
-//     {
-//         for (int p = j; p < n; p++)
-//         {
-//             C[k] = B[p];
-//             k++;
-//         }
-//     }
-// }
 
 int main(int argc, char **argv)
 {
@@ -97,16 +26,6 @@ int main(int argc, char **argv)
     int process_id;
     int number_of_process;
     MPI_Status status;
-
-    unsigned int soma;
-    unsigned int total;
-
-    int size_arr = atoi(argv[1]);
-    int *arr = (int *)malloc(size_arr * sizeof(int));
-    int *final_recv_arr = (int *)malloc(size_arr * sizeof(int));
-
-    // clock_t start_execution, end_execution;
-    // double execution_time;
 
     hostname_init(&hostname);
 
@@ -122,49 +41,101 @@ int main(int argc, char **argv)
     if (ret != MPI_SUCCESS)
         mpi_err(1, "MPI_Comm_size");
 
-    // generate random values in the array
-    set_random_values_to_arr(arr, size_arr);
+    // end of MPI initialization
+    int size_arr = atoi(argv[1]);
+    int *arr = (int *)malloc(size_arr * sizeof(int));
 
-    // evaluate the size chunk and displacements
-    int *chunk_size = (int *)malloc(sizeof(int) * number_of_process);
-    int *displacements = (int *)malloc(sizeof(int) * number_of_process);
+    double start_time;
+    double end_time;
 
-    split_num_between_processes(arr, number_of_process, chunk_size, displacements);
-
-    int *recv_chunk_arr = (int *)malloc(sizeof(int) * chunk_size[process_id]);
-
-    if (process_id == 0)
+    if (process_id == 0) // root
     {
+        // generate random values in the array
+        set_random_values_to_arr(arr, size_arr);
         // show all unordered array
         printf("Original array: \n");
-        printArray(arr, size_arr);
+        // printArray(arr, size_arr);
     }
 
+    // evaluate the size chunk and displacements
+    int *send_counter = (int *)malloc(number_of_process * sizeof(int));
+    int *displacements = (int *)malloc(sizeof(int) * number_of_process);
+    int send_size = size_arr / number_of_process;
+
+    int i;
+    for (i = 0; i < number_of_process; i++)
+    {
+        displacements[i] = i * send_size;
+        send_counter[i] = send_size;
+        if (i == number_of_process - 1)
+            send_counter[i] += size_arr % number_of_process;
+    }
+
+    int chunk_size = send_counter[process_id];
+    int *chunk = (int *)malloc(chunk_size * sizeof(int));
+
+    start_time = MPI_Wtime();
+
     // Scatterv distribute the chunks to all processors
-    MPI_Scatterv(arr, chunk_size[process_id], displacements, MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
-    // MPI_Scatterv(void *sendbuff, int sendcounts[nproc], int offsets[nproc],
-    //             MPI_Datatype sendtype, void *recvbuff, int recvcount,
-    //             MPI_Datatype recvtype, int root, MPI_Comm comm)
+    MPI_Scatterv(arr, send_counter, displacements, MPI_INT, chunk, chunk_size, MPI_INT, 0, MPI_COMM_WORLD);
 
     // show all ordered array
-    printf("Processado no [%s] rank %d\n", hostname, process_id);
-    bubbleSort(recv_chunk_arr, chunk_size[process_id]);
-    printArray(recv_chunk_arr, chunk_size[process_id]);
-
-    if (process_id == 0)
-        recv_chunk_arr = (int *)malloc(sizeof(int) * number_of_process); // clean chunks on root to gather the values
+    printf("Sorted at [%s] process_id [%d] \n", hostname, process_id);
+    // sort array
+    bubbleSort(chunk, chunk_size);
+    // printArray(chunk, chunk_size);
 
     // // gatherv collects the chunks from all processors
-    MPI_Gatherv(recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_chunk_arr, chunk_size, displacements, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(chunk, chunk_size, MPI_INT, arr, send_counter, displacements, MPI_INT, 0, MPI_COMM_WORLD);
 
-    if (process_id == 0)
+    if (process_id == 0) // merge all chunks back in result array
     {
+        int *result;
+        int *position;
 
-        printf("received values");
-        printf(recv_chunk_arr[0]);
-        // show all unordered array
-        // printf("Original ordered array: \n");
-        // printArray(recv_chunk_arr, chunk_size);
+        position = (int *)malloc(number_of_process * sizeof(int));
+        result = (int *)malloc(size_arr * sizeof(int));
+
+        for (i = 0; i < number_of_process; i++)
+        {
+            position[i] = 0;
+        }
+
+        for (i = 0; i < size_arr; i++)
+        {
+            int min_index = -1;
+            int min = INT_MAX; // max value of interger
+
+            int j;
+            for (j = 0; j < number_of_process; j++) // merge values from each processor
+            {
+                if (position[j] < send_counter[j]) // add values sorted
+                {
+                    if (arr[displacements[j] + position[j]] < min) // ensure it's a valid value
+                    {
+                        min = arr[displacements[j] + position[j]]; // jump displacements and update index
+                        min_index = j;
+                    }
+                }
+            }
+
+            result[i] = arr[displacements[min_index] + position[min_index]];
+            position[min_index]++;
+        }
+        end_time = MPI_Wtime();
+
+        printf("n= %d \n", size_arr);
+        printf("number_of_process= %d \n", number_of_process);
+        printf("time [s]=%g \n", (end_time - start_time));
+
+        for (i = 0; i < size_arr; i++)
+        {
+            printf("%d ", result[i]);
+        }
+
+        free(result);
+        free(position);
+        free(arr);
     }
 
     printf("\n");
