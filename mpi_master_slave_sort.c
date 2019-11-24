@@ -15,7 +15,7 @@ void set_random_values_to_arr(int arr[], int arr_size)
     srand(time(NULL));
     int i = 0;
     for (i; i < arr_size; i++)
-        arr[i] = (rand_between(0, arr_size) % arr_size);
+        arr[i] = rand_between(0, arr_size);
 }
 
 int main(int argc, char **argv)
