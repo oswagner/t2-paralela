@@ -164,9 +164,16 @@ int main(int argc, char **argv)
 
     if (process_id == 0)
     {
+
+        printf("received values");
+        printf(recv_gather_arr[0]);
+        printf(recv_gather_arr[1]);
+        printf(recv_gather_arr[2]);
+        printf(recv_gather_arr[3]);
+        printf(recv_gather_arr[4]);
         // show all unordered array
         // printf("Original ordered array: \n");
-        printArray(recv_gather_arr, chunk_size);
+        // printArray(recv_gather_arr, chunk_size);
     }
 
     printf("\n");
