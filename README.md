@@ -23,7 +23,7 @@ Y  = tempo de alocação
 ladalloc -c grad -n X -t Y -s
 ```
 
-ladalloc -c grad -n 3 -t 30 -s
+ladalloc -c grad -n 3 -t 30 -e
 
 mpirun -np 12 ./mpi_master_slave_sort
 

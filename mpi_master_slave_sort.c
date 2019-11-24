@@ -22,18 +22,11 @@ void set_random_values_to_arr(int arr[], int arr_size)
 void printArrayFile(int arr[], int size, char *hostname, int process_id)
 {
     FILE *output_file;
-    char path[] = "/out/";
-    char extension[] = ".txt";
-    char filename[50] = "";
-    char process_name[10] = "";
+    char filename[100] = "";
 
-    itoa(process_id, process_name, 10);
+    sprintf(filename, "/out/array_%s_%d.txt", hostname, process_id);
 
-    strncpy(path, hostname, sizeof(hostname));
-    strncpy(path, process_name, sizeof(process_name));
-    strncpy(path, extension, sizeof(extension));
-
-    output_file = fopen(path, "a+");
+    output_file = fopen(filename, "a+");
     int i;
     fprintf(output_file, "%s\n\t", "Vetor final ordenado:");
     for (i = 0; i < size; i++)
