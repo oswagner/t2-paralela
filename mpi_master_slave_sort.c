@@ -103,7 +103,7 @@ int main(int argc, char **argv)
 
     int size_arr = atoi(argv[1]);
     int *arr = (int *)malloc(size_arr * sizeof(int));
-    int *recv_arr = (int *)malloc(size_arr * sizeof(int));
+    int *final_recv_arr = (int *)malloc(size_arr * sizeof(int));
 
     // clock_t start_execution, end_execution;
     // double execution_time;
@@ -132,6 +132,7 @@ int main(int argc, char **argv)
     split_num_between_processes(size_arr, number_of_process, chunk_size, displacements);
 
     int *recv_chunk_arr = (int *)malloc(sizeof(int) * chunk_size[process_id]);
+    int *recv_gather_arr = (int *)malloc(sizeof(int) * number_of_process);
 
     if (process_id == 0)
     {
@@ -141,7 +142,10 @@ int main(int argc, char **argv)
     }
 
     // Scatterv distribute the chunks to all processors
-    MPI_Scatterv(arr, chunk_size, displacements, MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(arr, chunk_size, displacements[process_id], MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
+    // MPI_Scatterv(void *sendbuff, int sendcounts[nproc], int offsets[nproc],
+    //             MPI_Datatype sendtype, void *recvbuff, int recvcount,
+    //             MPI_Datatype recvtype, int root, MPI_Comm comm)
 
     // show all ordered array
     printf("Processado no [%s] rank %d\n", hostname, process_id);
@@ -152,14 +156,29 @@ int main(int argc, char **argv)
         recv_chunk_arr = (int *)malloc(sizeof(int) * number_of_process); // clean chunks on root to gather the values
 
     // // gatherv collects the chunks from all processors
-    MPI_Gatherv(recv_chunk_arr, chunk_size[process_id], MPI_INT, &recv_arr, chunk_size, displacements, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(recv_chunk_arr, chunk_size[process_id], MPI_INT, recv_gather_arr, chunk_size, displacements[process_id], MPI_INT, 0, MPI_COMM_WORLD);
     // MPI_Gather(&arr, chunk_size, MPI_INT, recv_chunk_arr, chunk_size[process_id], MPI_INT, 0, MPI_COMM_WORLD);
+    // MPI_Gatherv(void *sendbuff, int sendcount, MPI_Datatype sendtype,
+    //             void *recvbuff, int recvcounts[nproc], int offsets[nproc],
+    //             MPI_Datatype recvtype, int root, MPI_Comm comm);
 
     if (process_id == 0)
     {
         // show all unordered array
-        printf("Original ordered array: \n");
-        printArray(recv_arr, chunk_size);
+        // printf("Original ordered array: \n");
+        // printArray(recv_arr, chunk_size);
+        int i, j, z;
+        i = j = z = 0;
+        int size_i = sizeof(recv_gather_arr) / sizeof(recv_gather_arr[0]);
+        int size_j;
+        for (i; i < size_i; i++)
+        {
+            int *values = recv_gather_arr[i];
+            size_j = sizeof(values) / sizeof(values[0]);
+            for (j; j < size_j; j++)
+            {
+            }
+        }
     }
 
     printf("\n");
