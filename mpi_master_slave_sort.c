@@ -75,9 +75,9 @@ int main(int argc, char **argv)
         // generate random values in the array
         set_random_values_to_arr(arr, size_arr);
         // show all unordered array
-        printf("Original array: \n");
-        printArray(arr, size_arr);
-        printArrayFile(arr, size_arr, hostname, process_id, 0);
+        // printf("Original array: \n");
+        // printArray(arr, size_arr);
+        // printArrayFile(arr, size_arr, hostname, process_id, 0);
     }
 
     // evaluate the size chunk and displacements
@@ -104,11 +104,10 @@ int main(int argc, char **argv)
 
     // show all ordered array
     printf("Sorted at [%s] process_id [%d] \n", hostname, process_id);
-    printArrayFile(chunk, chunk_size, hostname, process_id, 0);
+
     // sort array
     bubbleSort(chunk, chunk_size);
     // printArray(chunk, chunk_size);
-    printArrayFile(chunk, chunk_size, hostname, process_id, 1);
 
     // gatherv collects the chunks from all processors
     MPI_Gatherv(chunk, chunk_size, MPI_INT, arr, send_counter, displacements, MPI_INT, 0, MPI_COMM_WORLD);
@@ -152,12 +151,8 @@ int main(int argc, char **argv)
         printf("n= %d \n", size_arr);
         printf("number_of_process= %d \n", number_of_process);
         printf("time [s]=%g \n", (end_time - start_time));
-        printArrayFile(result, size_arr, hostname, process_id, 1);
-
-        for (i = 0; i < size_arr; i++)
-        {
-            printf("%d ", result[i]);
-        }
+        // printArrayFile(result, size_arr, hostname, process_id, 1);
+        // printArray(result, size_arr);
 
         free(result);
         free(position);
