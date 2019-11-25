@@ -1,6 +1,4 @@
-# t2-paralela
-
-
+# Parallel sort with Open MPI
 
 ## Execução do programa
 
