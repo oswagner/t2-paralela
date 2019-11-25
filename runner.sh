@@ -3,17 +3,17 @@
 helpFunction()
 {
    echo ""
-   echo "Usage: $0 -a 8 -b 1000"
-   echo -e "\t-a Number of processors"
-   echo -e "\t-b Size of array"
+   echo "Usage: $0 -p 8 -n 1000"
+   echo -e "\t-p Number of processors"
+   echo -e "\t-n Size of array"
    exit 1 # Exit script after printing help
 }
 
-while getopts "a:b:" opt
+while getopts "p:n:" opt
 do
    case "$opt" in
-      a ) processors="$OPTARG" ;;
-      b ) array_size="$OPTARG" ;;
+      p ) processors="$OPTARG" ;;
+      n ) array_size="$OPTARG" ;;
       ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
    esac
 done
