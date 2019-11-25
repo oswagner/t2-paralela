@@ -114,6 +114,7 @@ int main(int argc, char **argv)
 
     if (process_id == 0) // merge all chunks back in result array
     {
+        printf("Mergin values");
         int *result;
         int *position;
 

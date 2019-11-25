@@ -25,10 +25,6 @@ then
    helpFunction
 fi
 
-# Begin script in case all parameters are correct
-echo "$processors"
-echo "$array_size"
-
 rm -rf ./out/*
 
 make clean
@@ -36,11 +32,12 @@ make clean
 make
 
 mpirun -np $processors ./mpi_master_slave_sort $array_size
-# mpirun -np 1 ./mpi_master_slave_sort 1000s
-# mpirun -np 2 ./mpi_master_slave_sort 1000
-# mpirun -np 4 ./mpi_master_slave_sort 1000
-# mpirun -np 6 ./mpi_master_slave_sort 1000
-# mpirun -np 8 ./mpi_master_slave_sort 1000
-# mpirun -np 16 ./mpi_master_slave_sort 1000
-# mpirun -np 32 ./mpi_master_slave_sort 1000
-# mpirun -np 48 ./mpi_master_slave_sort 1000
+
+# mpirun -np 1 ./mpi_master_slave_sort 200000
+# mpirun -np 2 ./mpi_master_slave_sort 200000
+# mpirun -np 4 ./mpi_master_slave_sort 200000
+# mpirun -np 6 ./mpi_master_slave_sort 200000
+# mpirun -np 8 ./mpi_master_slave_sort 200000
+# mpirun -np 16 ./mpi_master_slave_sort 200000
+# mpirun -np 32 ./mpi_master_slave_sort 200000
+# mpirun -np 48 ./mpi_master_slave_sort 200000
